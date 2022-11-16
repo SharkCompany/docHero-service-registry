@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  eureka-server:
+    container_name: dochero-eureka-server
+    build: .
+    restart: on-failure
+    env_file: ./.env
+    ports:
+      - 9761:8761
+    stdin_open: true
+    tty: true

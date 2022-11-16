@@ -1,0 +1,10 @@
+version: "3.8"
+
+services:
+  eureka-server:
+    image: dochero-server-registry
+    container_name: dochero-eureka-server
+    ports:
+      - 9761:8761
+    stdin_open: true
+    tty: true
