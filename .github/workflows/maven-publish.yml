@@ -25,7 +25,7 @@ jobs:
     - name: Build the Docker image
       run:
         cd eureka-server;
-        .\mvnw clean -DskipTests=true package;
+        sh mvnw clean -DskipTests=true package;
         docker build . --file Dockerfile --tag phongvanngo/dochero-service-registry:latest;
         docker tag phongvanngo/dochero-service-registry:latest phongvanngo/dochero-service-registry:$version;
         docker images;
