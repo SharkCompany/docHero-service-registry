@@ -31,24 +31,27 @@ jobs:
         distribution: 'temurin'
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
-    
-#     - name: Build with Maven
-#       run: cd eureka-server; mvn -B package --file pom.xml
-    
-    - name: Build the Docker image
-      run:
+        
+    - name: Maven Build;
+      run: 
         cd eureka-server;
         sh mvnw clean -DskipTests=true package;
+    
+    - name: Build Docker image
+      run:
+        cd eureka-server;
         docker build . --file Dockerfile --tag phongvanngo/dochero-service-registry:latest;
         docker tag phongvanngo/dochero-service-registry:latest phongvanngo/dochero-service-registry:$version;
-        docker images;
+        
+    - name: Push Docker Image
+      run:
         docker login --username=${dockerhub_username} --password=${dockerhub_password};
         docker push phongvanngo/dochero-service-registry:$version;
         docker push phongvanngo/dochero-service-registry:latest;
       
   deploy:
     runs-on: ubuntu-latest
-    needs: build
+#     needs: build
     steps:
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
@@ -56,4 +59,4 @@ jobs:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USERNAME }}
         password: ${{ secrets.SERVER_PASSWORD }}
-        script: cd /docker-compose-list/dochero/;sudo git pull;sudo docker-compose pull;sudo docker-compose up -d service-registry;
+        script: cd /home/mtr/docker-compose-list/dochero/;sudo git pull;sudo docker-compose pull;sudo docker-compose up -d service-registry;
